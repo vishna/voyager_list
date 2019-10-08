@@ -1,6 +1,6 @@
 name: voyager_list
 description: Voyager add-on package. Facilitates dynamic mapping of a list of arbitrary objects to a ListWiew.
-version: 0.0.1
+version: 0.0.2
 author: Lukasz Wisniewski <luke.cherrish@gmail.com>
 homepage: https://github.com/vishna/voyager_list
 
@@ -10,8 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  voyager: ^1.0.7
-  provider: ^3.1.0
+  voyager: '>=1.0.0'
+  provider: '>=3.0.0'
 
 dev_dependencies:
   flutter_test:

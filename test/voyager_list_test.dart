@@ -5,7 +5,7 @@ import 'package:voyager_list/voyager_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:voyager/voyager.dart' hide VoyagerListView;
+import 'package:voyager/voyager.dart';
 
 const navigationYaml = '''
 '/list' :

@@ -1,3 +1,7 @@
+# 0.1.0
+
+* Use provider 4.0.0
+
 # 0.0.2
 
 * Change dependencies constraints

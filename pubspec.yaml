@@ -1,6 +1,6 @@
 name: voyager_list
 description: Voyager add-on package. Facilitates dynamic mapping of a list of arbitrary objects to a ListWiew.
-version: 0.1.0
+version: 0.3.0
 homepage: https://github.com/vishna/voyager_list
 
 environment:

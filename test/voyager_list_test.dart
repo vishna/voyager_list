@@ -41,7 +41,7 @@ class ListWidget extends StatelessWidget {
     final String title = voyager["title"];
 
     // ignore: avoid_as
-    final talks = (voyager["items"] as List<dynamic>)
+    final talks = voyager["items"]
         .toList()
         .map((dynamic item) => Talk(item["city"], item["event"], item["date"]))
         .toList();
@@ -75,7 +75,7 @@ class TalkWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final Talk talk = Provider.of<VoyagerArgument>(context).value;
+    final Talk talk = Provider.of<VoyagerArgument?>(context)?.value!;
     return Padding(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
         child: Column(
@@ -124,20 +124,24 @@ void main() {
   testWidgets('create VoyagerList with dynamic Items',
       (WidgetTester tester) async {
     await tester.runAsync(() async {
-      final paths = loadPathsFromString(navigationYaml);
+      final paths = loadPathsFromYamlString(navigationYaml);
       final plugins = [
         WidgetPluginBuilder()
-            .add<ListWidget>((_) => ListWidget())
-            .add<TalkWidget>((_) => TalkWidget())
+            .add('ListWidget', (_) => ListWidget())
+            .add('TalkWidget', (_) => TalkWidget())
             .build()
       ];
 
       final router = await loadRouter(paths, plugins);
 
-      expect(router, isInstanceOf<Router>());
+      expect(router, isInstanceOf<VoyagerRouter>());
 
       await tester.pumpWidget(
-          MaterialApp(home: VoyagerWidget(path: "/list", router: router)));
+          Provider<VoyagerRouter>.value(
+            value: router,
+            child: MaterialApp(home: VoyagerWidget(path: "/list", router: router)),
+          ),
+      );
 
       expect(find.text("Berlin"), findsOneWidget);
       expect(find.text("Łódź"), findsOneWidget);
@@ -148,17 +152,17 @@ void main() {
   testWidgets('create VoyagerList with dynamic Items + rearrange',
       (WidgetTester tester) async {
     await tester.runAsync(() async {
-      final paths = loadPathsFromString(navigationYaml2);
+      final paths = loadPathsFromYamlString(navigationYaml2);
       final plugins = [
         WidgetPluginBuilder()
-            .add<ListWidget2>((_) => ListWidget2())
-            .add<TalkWidget>((_) => TalkWidget())
+            .add('ListWidget2', (_) => ListWidget2())
+            .add('TalkWidget', (_) => TalkWidget())
             .build()
       ];
 
       final router = await loadRouter(paths, plugins);
 
-      expect(router, isInstanceOf<Router>());
+      expect(router, isInstanceOf<VoyagerRouter>());
 
       const talks1 = <Talk>[
         Talk("Berlin", "Droidcon", "July 1, 2019"),
@@ -191,17 +195,17 @@ void main() {
   testWidgets('create VoyagerList with dynamic Items + rearrange + duplicates',
       (WidgetTester tester) async {
     await tester.runAsync(() async {
-      final paths = loadPathsFromString(navigationYaml2);
+      final paths = loadPathsFromYamlString(navigationYaml2);
       final plugins = [
         WidgetPluginBuilder()
-            .add<ListWidget2>((_) => ListWidget2())
-            .add<TalkWidget>((_) => TalkWidget())
+            .add('ListWidget2', (_) => ListWidget2())
+            .add('TalkWidget', (_) => TalkWidget())
             .build()
       ];
 
       final router = await loadRouter(paths, plugins);
 
-      expect(router, isInstanceOf<Router>());
+      expect(router, isInstanceOf<VoyagerRouter>());
 
       const talks1 = <Talk>[
         Talk("London", "FlutterLDN", "October 21, 2019"),
@@ -234,9 +238,9 @@ void main() {
 }
 
 class TalksWidget extends StatefulWidget {
-  const TalksWidget({Key key, this.talks, this.router}) : super(key: key);
+  const TalksWidget({Key? key, required this.talks, required this.router}) : super(key: key);
   final List<Talk> talks;
-  final Router router;
+  final VoyagerRouter router;
 
   @override
   State<StatefulWidget> createState() => TalksWidgetState();
@@ -245,9 +249,12 @@ class TalksWidget extends StatefulWidget {
 class TalksWidgetState extends State<TalksWidget> {
   @override
   Widget build(BuildContext context) {
-    return Provider.value(
+    return Provider<List<Talk>>.value(
         value: widget.talks,
-        child: MaterialApp(
-            home: VoyagerWidget(path: "/list", router: widget.router)));
+        child: Provider<VoyagerRouter>.value(
+          value: widget.router,
+          child: MaterialApp(
+              home: VoyagerWidget(path: "/list", router: widget.router)),
+        ));
   }
 }

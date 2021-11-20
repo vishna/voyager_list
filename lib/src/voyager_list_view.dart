@@ -31,7 +31,7 @@ class VoyagerListView extends StatelessWidget {
     this.cacheExtent,
     this.semanticChildCount,
   })  : _idToIndex = <String, int>{},
-        _items = List<_VoyagerItem>(items.length),
+        _items = <_VoyagerItem>[],
         super(key: key) {
     final n = items.length;
     final duplicateCounter = <String, int>{};
@@ -43,10 +43,14 @@ class VoyagerListView extends StatelessWidget {
       final id = itemKeyId(_id, duplicateNumber: count);
       final path = pathMapper(item);
       _idToIndex[id] = index;
-      _items[index] = _VoyagerItem(
+      _items.insert(
+        index, 
+        _VoyagerItem(
           argument: VoyagerArgument(item),
           path: path,
-          key: ValueKey<String>(id));
+          key: ValueKey<String>(id)
+        ),
+      );
     }
   }
 

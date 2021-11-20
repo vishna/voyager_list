@@ -1,11 +1,8 @@
+import 'package:flutter/material.dart' hide Router;
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:voyager_list/voyager_list.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:voyager/voyager.dart';
+import 'package:voyager_list/voyager_list.dart';
 
 const navigationYaml = '''
 '/list' :
